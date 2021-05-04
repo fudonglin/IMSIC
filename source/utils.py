@@ -213,9 +213,11 @@ def generate_sample(label, index, gene_size=100):
 
 def get_trained_generator_discriminator(path):
     generator = g.Generator()
-    # checkpoint = torch.load(path, map_location=torch.device('cpu'))
-    # checkpoint = torch.load(path, map_location=torch.device('cuda:0'))
-    checkpoint = torch.load(path)
+    if cuda:
+        checkpoint = torch.load(path)
+    else:
+        checkpoint = torch.load(path, map_location=torch.device('cpu'))
+
     generator.load_state_dict(checkpoint['generator'])
     generator.eval()
 
