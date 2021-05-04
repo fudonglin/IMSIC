@@ -12,6 +12,7 @@ from torchvision import datasets
 import os
 
 cuda = True if torch.cuda.is_available() else False
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 opt = params.opt
 
@@ -170,7 +171,7 @@ def get_imbalanced_dataset(label, num):
 def initial_mnist_imbalanced_data(labels, nums, gene_indexes, gene_nums):
     """ Returns imbalanced data for CNNs """
 
-    images = torch.empty(0)
+    images = torch.empty(0, device=device)
     targets = torch.empty(0, dtype=int)
     length = len(labels)
     for i in range(length):
@@ -185,7 +186,10 @@ def initial_mnist_imbalanced_data(labels, nums, gene_indexes, gene_nums):
         images = torch.cat([images, temp_images, temp_gene_images], dim=0)
         targets = torch.cat([targets, temp_labels, temp_gene_labels], dim=0)
 
-    x, y = shuffle(images.detach().numpy(), targets.detach().numpy())
+    if cuda:
+        x, y = shuffle(images.cpu().detach().numpy(), targets.cpu().detach().numpy())
+    else:
+        x, y = shuffle(images.detach().numpy(), targets.detach().numpy())
     return torch.from_numpy(x), torch.from_numpy(y)
 
 
@@ -195,9 +199,10 @@ def generate_sample(label, index, gene_size=100):
     path = opt.gan_dir + '/GAN_MNIST.pt'
     generator, _ = get_trained_generator_discriminator(path)
 
-    data = torch.empty(0)
+    data = torch.empty(0, device=device)
     targets = torch.empty(0, dtype=int)
     repeat = int(gene_size / 100)
+
     for i in range(repeat):
         gene_data = generate_img(generator, label, index)
         data = torch.cat([data, gene_data], dim=0)
@@ -208,13 +213,20 @@ def generate_sample(label, index, gene_size=100):
 
 def get_trained_generator_discriminator(path):
     generator = g.Generator()
-    checkpoint = torch.load(path, map_location=torch.device('cpu'))
+    # checkpoint = torch.load(path, map_location=torch.device('cpu'))
+    # checkpoint = torch.load(path, map_location=torch.device('cuda:0'))
+    checkpoint = torch.load(path)
     generator.load_state_dict(checkpoint['generator'])
     generator.eval()
 
     discriminator = d.Discriminator()
     discriminator.load_state_dict(checkpoint['discriminator'])
     discriminator.eval()
+
+    if cuda:
+        generator.cuda()
+        discriminator.cuda()
+
     return generator, discriminator
 
 
@@ -222,7 +234,7 @@ def generate_img(generator, label, label_index, n_row=10):
     """ Returns generative result """
 
     static_z, static_label, static_code = get_specific_label_gen_input(label_index)
-    z = Variable(torch.FloatTensor(np.random.normal(0, 0.5, (n_row ** 2, opt.latent_dim))))
+    z = Variable(FloatTensor(np.random.normal(0, 0.5, (n_row ** 2, opt.latent_dim))))
     sample = generator(z, static_label, static_code)
 
     img_dir = opt.gene_img_dir
@@ -268,6 +280,10 @@ def get_specific_label(label, size):
 
     dataiter = iter(data_loader)
     images, labels = next(dataiter)
+
+    if cuda:
+        images = images.to(device="cuda")
+
     return images, labels
 
 
@@ -326,7 +342,7 @@ def initial_parameters(dataset):
 
 def initial_fashion_imbalanced_data(labels, nums, gene_indexes, gene_nums):
 
-    images = torch.empty(0)
+    images = torch.empty(0, device=device)
     targets = torch.empty(0, dtype=int)
     length = len(labels)
     for i in range(length):
@@ -341,7 +357,11 @@ def initial_fashion_imbalanced_data(labels, nums, gene_indexes, gene_nums):
         images = torch.cat([images, temp_images, temp_gene_images], dim=0)
         targets = torch.cat([targets, temp_labels, temp_gene_labels], dim=0)
 
-    x, y = shuffle(images.detach().numpy(), targets.detach().numpy())
+    if cuda:
+        x, y = shuffle(images.cpu().detach().numpy(), targets.cpu().detach().numpy())
+    else:
+        x, y = shuffle(images.detach().numpy(), targets.detach().numpy())
+
     return torch.from_numpy(x), torch.from_numpy(y)
 
 
@@ -362,6 +382,10 @@ def get_fashion_specific_label(label, size):
 
     dataiter = iter(data_loader)
     images, labels = next(dataiter)
+
+    if cuda:
+        images = images.to(device=device)
+
     return images, labels
 
 
@@ -375,7 +399,7 @@ def generate_fashion_sample(label, index, gene_num=100):
 
     generator, _ = get_trained_generator_discriminator(opt.gan_dir + '/GAN_Fashion_MNIST.pt')
 
-    data = torch.empty(0)
+    data = torch.empty(0, device=device)
     targets = torch.empty(0, dtype=int)
     repeat = int(gene_num / 100)
     for i in range(repeat):
@@ -390,7 +414,7 @@ def generate_fashion_img(generator, label, label_index, n_row=10, factor=4.9):
     """ Returns generative result """
 
     static_z, static_label, static_code = get_specific_label_gen_input(label_index)
-    z = Variable(torch.FloatTensor(np.random.normal(0, 0.2, (n_row ** 2, opt.latent_dim))))
+    z = Variable(FloatTensor(np.random.normal(0, 0.2, (n_row ** 2, opt.latent_dim))))
 
     zeros = np.zeros((n_row ** 2, 1))
     c_varied = torch.randn(100, 1) * factor
@@ -398,7 +422,7 @@ def generate_fashion_img(generator, label, label_index, n_row=10, factor=4.9):
     # code
     l = [zeros] * opt.code_dim
     l[2] = c_varied
-    code = Variable(torch.FloatTensor(np.concatenate(tuple(l), -1)))
+    code = Variable(FloatTensor(np.concatenate(tuple(l), -1)))
 
     sample = generator(z, static_label, code)
 
