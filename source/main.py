@@ -1,4 +1,3 @@
-
 import train_cnn as cnn
 
 

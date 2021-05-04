@@ -58,7 +58,6 @@ def train():
 
             images = total_images[start_idx:end_idx]
             labels = total_labels[start_idx:end_idx]
-            train_size = len(labels)
 
             outputs = model(images)
             loss = criterion(outputs, labels)
