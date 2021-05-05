@@ -56,7 +56,7 @@ python main.py --dataset mnist --batch_size 64 --cnn_lr 0.0001 --epochs 8
 For Fashion-MNIST:
 
 ```python
-python main.py --dataset fashion-mnist --batch_size 64 --CNN_lr 0.0001 --epochs 25
+python main.py --dataset fashion-mnist --batch_size 64 --cnn_lr 0.0001 --epochs 25
 ```
 
 ### GAN
