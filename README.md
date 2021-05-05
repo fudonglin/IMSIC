@@ -1,4 +1,7 @@
-# Interpretable Minority Synthesis for Imbalanced Classification
+# Interpretable Minority Synthesis for Imbalanced Classification 
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 > Interpretable Minority Synthesis for Imbalanced Classification (IMSIC)
 >
 > Yi He, Fudong Lin, Xu Yuan and Nian-Feng Tzeng
@@ -75,4 +78,8 @@ python main.py --help
 
 
 ## Citation
+
+
+
+
 
