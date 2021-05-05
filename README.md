@@ -47,7 +47,7 @@ cd source
 
 ### CNN
 
-To train CNN from the pre-train GAN. For mnist:
+To train CNN from a pre-train GAN. For mnist:
 
 ```python
 python main.py --dataset mnist --batch_size 64 --cnn_lr 0.0001 --epochs 8
@@ -67,7 +67,7 @@ To train GAN from scratch:
 python grid_search.py --dataset mnist --n_epochs 500 --batch_size 64 --lr 0.0002
 ```
 
-More details about parameters, please use:
+More details about hyperparameters, please use:
 
 ```python
 python main.py --help
