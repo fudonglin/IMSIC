@@ -15,9 +15,6 @@ cuda = True if torch.cuda.is_available() else False
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 opt = params.opt
-DATASETS_DICT = {"mnist": "MNIST",
-                 "fashion-mnist": "FashionMNIST",
-                 }
 
 
 def get_transform():
