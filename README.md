@@ -1,6 +1,6 @@
 # Interpretable Minority Synthesis for Imbalanced Classification 
 
-![Python 3.8](https://img.shields.io/badge/python-3.8-green.svg)
+![Python 3.8](https://img.shields.io/badge/python-3.8-yellow.svg)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 > Interpretable Minority Synthesis for Imbalanced Classification (IMSIC)
