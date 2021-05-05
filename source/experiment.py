@@ -31,13 +31,10 @@ def experiment():
 
     generator, discriminator, adversarial_loss, categorical_loss, continuous_loss = utils.init_GAN()
 
-    # completed data
-    # dataloader = utils.get_MNIST_train_loader()
-
     # imbalanced data
     labels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     sizes = [4000, 2000, 1000, 750, 500, 350, 200, 100, 60, 40]
-    dataloader = utils.get_imbalance_dataloader(labels, sizes)
+    dataloader = utils.get_imbalance_dataloader(opt.dataset, labels, sizes)
 
     optimizer_G = torch.optim.Adam(generator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))
     optimizer_D = torch.optim.Adam(discriminator.parameters(), lr=opt.lr, betas=(opt.b1, opt.b2))

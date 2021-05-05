@@ -15,6 +15,9 @@ cuda = True if torch.cuda.is_available() else False
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 FloatTensor = torch.cuda.FloatTensor if cuda else torch.FloatTensor
 opt = params.opt
+DATASETS_DICT = {"mnist": "MNIST",
+                 "fashion-mnist": "FashionMNIST",
+                 }
 
 
 def get_transform():
@@ -139,25 +142,29 @@ def get_structure_loss(loss_function, code_input, pred_code, negative_edges, pos
         return sum(losses) - sum(gains) - sum(gains2)
 
 
-def get_imbalance_dataloader(labels, sizes):
+def get_imbalance_dataloader(dataset_name, labels, sizes):
     """ Returns imbalanced train loader """
 
     dataset_list = []
     for i in range(0, len(labels)):
         label = labels[i]
         size = sizes[i]
-        temp_dataset = get_imbalanced_dataset(label, size)
+        temp_dataset = get_imbalanced_dataset(dataset_name, label, size)
         dataset_list.append(temp_dataset)
 
     dataset = ConcatDataset(dataset_list)
     return DataLoader(dataset, batch_size=opt.batch_size, shuffle=True)
 
 
-def get_imbalanced_dataset(label, num):
+def get_imbalanced_dataset(dataset_name, label, num):
     """ Returns specific number of label """
 
     os.makedirs(opt.data_dir, exist_ok=True)
-    dataset = datasets.MNIST(opt.data_dir, train=True, download=True, transform=get_transform())
+    if dataset_name == 'mnist':
+        dataset = datasets.MNIST(opt.data_dir, train=True, download=True, transform=get_transform())
+    else:
+        dataset = datasets.FashionMNIST(opt.data_dir, train=True, download=True, transform=get_transform())
+
     index = (dataset.targets == label)
     dataset.targets = dataset.targets[index]
     dataset.data = dataset.data[index]
@@ -195,6 +202,9 @@ def initial_mnist_imbalanced_data(labels, nums, gene_indexes, gene_nums):
 
 def generate_sample(label, index, gene_size=100):
     """ Generates images and targets via GAN """
+
+    # set code_dim for pre-train model
+    opt.code_dim = 4
 
     path = opt.gan_dir + '/GAN_MNIST.pt'
     generator, _ = get_trained_generator_discriminator(path)
@@ -343,7 +353,6 @@ def initial_parameters(dataset):
 
 
 def initial_fashion_imbalanced_data(labels, nums, gene_indexes, gene_nums):
-
     images = torch.empty(0, device=device)
     targets = torch.empty(0, dtype=int)
     length = len(labels)
@@ -368,9 +377,11 @@ def initial_fashion_imbalanced_data(labels, nums, gene_indexes, gene_nums):
 
 
 def get_fashion_specific_label(label, size):
-    train_set = datasets.FashionMNIST(root=opt.fashion_data_dir, download=True, train=True, transform=transforms.Compose(
-        [transforms.Resize(32), transforms.ToTensor(), transforms.Normalize([0.5], [0.5])]
-    ))
+    train_set = datasets.FashionMNIST(root=opt.fashion_data_dir, download=True, train=True,
+                                      transform=transforms.Compose(
+                                          [transforms.Resize(32), transforms.ToTensor(),
+                                           transforms.Normalize([0.5], [0.5])]
+                                      ))
 
     idx = (train_set.targets == label)
     train_set.targets = train_set.targets[idx]
@@ -396,7 +407,7 @@ def generate_fashion_sample(label, index, gene_num=100):
     generate images, labels via GAN
     """
 
-    # set code_dim
+    # set code_dim for pre-train model
     opt.code_dim = 3
 
     generator, _ = get_trained_generator_discriminator(opt.gan_dir + '/GAN_Fashion_MNIST.pt')
