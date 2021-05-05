@@ -41,7 +41,6 @@ pip install -r requirements.txt
 Move to source code directory:
 
 ```python
-# install requirement
 cd source
 ```
 
