@@ -80,6 +80,7 @@ python main.py --help
 
 
 ## Citation
+```
 @inproceedings{he21:ijcai:interpretable,
   author    = {Yi He and
                Fudong Lin and
@@ -92,6 +93,7 @@ python main.py --help
   pages     = {2542--2548},
   year      = {2021}
 }
+```
 
 
 
