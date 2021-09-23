@@ -10,7 +10,7 @@
 
 This is the official implementation of IMSIC.
 
-[paper link]()
+[paper link](https://www.ijcai.org/proceedings/2021/0350.pdf)
 
 ## Abstract
 
@@ -80,7 +80,18 @@ python main.py --help
 
 
 ## Citation
-
+@inproceedings{he21:ijcai:interpretable,
+  author    = {Yi He and
+               Fudong Lin and
+               Xu Yuan and
+               Nian{-}Feng Tzeng},
+  title     = {Interpretable Minority Synthesis for Imbalanced Classification},
+  booktitle = {Proceedings of the Thirtieth International Joint Conference on Artificial
+               Intelligence, {IJCAI} 2021, Virtual Event / Montreal, Canada, 19-27
+               August 2021},
+  pages     = {2542--2548},
+  year      = {2021}
+}
 
 
 
