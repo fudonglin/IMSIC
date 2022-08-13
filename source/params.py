@@ -11,9 +11,12 @@ parser.add_argument("--gene_img_dir", type=str, default='./../gene_img/')
 
 # CNN parameters
 parser.add_argument("--dataset", type=str, default='mnist')
-parser.add_argument("--path", type=str, default='./../models/cnn/cnn_epoch_8.pt')
+parser.add_argument("--path", type=str, default='./../models/cnn/cnn_mnist.pt')
 parser.add_argument("--cnn_lr", type=float, default=0.0001)
 parser.add_argument("--epochs", type=int, default=8)
+parser.add_argument('-e', '--evaluate', dest='evaluate', action='store_true',
+                    help='evaluate model on validation set')
+parser.set_defaults(evaluate=True)
 
 # GAN parameters
 parser.add_argument("--n_epochs", type=int, default=500)
