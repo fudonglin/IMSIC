@@ -2,12 +2,7 @@ import argparse
 import torch
 
 import utils
-
-parser = argparse.ArgumentParser()
-parser.add_argument('-path', '--path', type=str, default='./../models/cnn/cnn_epoch_8.pt')
-parser.add_argument("-dataset", "--dataset", type=str, default='mnist', choices=['mnist', 'fashion-mnist'],
-                    help='the root directory for data.')
-args = parser.parse_args()
+from source import params
 
 
 def evaluate(path, dataset):
@@ -18,4 +13,5 @@ def evaluate(path, dataset):
 
 
 if __name__ == '__main__':
+    args = params.opt
     evaluate(args.path, args.dataset)

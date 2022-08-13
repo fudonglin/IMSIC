@@ -11,7 +11,7 @@ parser.add_argument("--gene_img_dir", type=str, default='./../gene_img/')
 
 # CNN parameters
 parser.add_argument("--dataset", type=str, default='mnist')
-# parser.add_argument("--dataset", type=str, default='fashion-mnist')
+parser.add_argument("--path", type=str, default='./../models/cnn/cnn_epoch_8.pt')
 parser.add_argument("--cnn_lr", type=float, default=0.0001)
 parser.add_argument("--epochs", type=int, default=8)
 
