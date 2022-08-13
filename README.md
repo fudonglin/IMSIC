@@ -10,7 +10,7 @@
 
 This is the official implementation of IMSIC.
 
-[paper link](https://www.ijcai.org/proceedings/2021/0350.pdf)
+[Paper](https://www.ijcai.org/proceedings/2021/0350.pdf)
 
 ## Abstract
 
